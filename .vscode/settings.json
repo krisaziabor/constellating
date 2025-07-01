@@ -1,0 +1,14 @@
+{
+    "editor.defaultFormatter": "vknabel.vscode-swiftformat",
+    "editor.formatOnSave": true,
+    "swift.formatOnSave": true,
+    "files.associations": {
+        "*.swift": "swift"
+    },
+    "editor.tabSize": 4,
+    "cursor.chat.defaultPrompts": {
+        "explainCode": "Explain this Swift/SwiftUI code for the Constellating Are.na search tool",
+        "findBugs": "Find issues in this code, especially around API calls, caching, and URL matching",
+        "optimize": "Optimize this for performance, considering Are.na rate limits"
+    }
+}

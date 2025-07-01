@@ -1,9 +1,11 @@
 # Claude Code Context: Constellating v1 - Are.na Search Tool
 
 ## Project Vision
+
 I'm building "Constellating" - a macOS app that helps designers discover connections between their inspirations using Are.na's community-curated collections. Version 1 focuses solely on the Are.na search functionality. The name represents the ongoing action of connecting design elements to form larger creative constellations.
 
 ## Current Development Focus (v1)
+
 - [x] Project structure setup
 - [ ] Are.na API integration
 - [ ] SQLite caching system
@@ -29,6 +31,7 @@ I'm building "Constellating" - a macOS app that helps designers discover connect
 6. Present ranked results
 
 ### URL Matching Rules
+
 - **Strip URL**: Extract domain name only (example.com → example)
 - **Flexible Matching**: Accept www/no-www, http/https
 - **Inexact Matches**: Flag URLs with extra path segments
@@ -37,12 +40,14 @@ I'm building "Constellating" - a macOS app that helps designers discover connect
   - ⚠️ Inexact: https://example.com/blog/post
 
 ### API Details
+
 - **Base URL**: https://api.are.na/v2
 - **Auth**: None required for GET requests
 - **Rate Limit**: 60 requests/minute
 - **Pagination**: Check `total_pages` in responses
 
 ### Channel Preview Data
+
 When hovering a channel, fetch:
 
 GET /v2/channels/{slug}/thumb → title, user.full_name, length GET /v2/channels/{slug}/connections → connection count First 6 thumbnails from contents[].image.thumb.url
@@ -50,25 +55,30 @@ GET /v2/channels/{slug}/thumb → title, user.full_name, length GET /v2/channels
 ## Business Rules
 
 ### Caching
+
 - **Fresh**: < 6 months old
 - **Stale**: > 6 months old (show warning, auto-refresh unless user opts out)
 - **Re-index**: User can manually trigger anytime
 
 ### Large Channel Handling
+
 - Fetch first 50 URLs automatically
 - Show "Load more" option for channels with more content
 - User controls continued fetching
 
 ### Error Handling
+
 - **401 Unauthorized**: Skip private channels silently
 - **Rate Limit**: Queue requests, show progress
 - **Network Errors**: Fall back to cached data if available
 
 ### Duplicate Prevention
+
 - Within a single channel, count each unique URL only once
 - Across channels, sum occurrences for ranking
 
 ## Database Schema
+
 ```sql
 -- Core tables for v1
 searches → Track search history and cache age
@@ -133,8 +143,8 @@ class SearchViewModel: ObservableObject {
 
 - **Click**: Open in browser
 - **Context Menu**:
-    - View inner channels (contents)
-    - View outer channels (connections)
+  - View inner channels (contents)
+  - View outer channels (connections)
 
 ## Common Queries for Claude
 
