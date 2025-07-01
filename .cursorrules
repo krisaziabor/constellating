@@ -1,0 +1,211 @@
+# Project: Constellating - Design Research Constellation Builder (v1)
+
+## Project Philosophy
+"Constellating" represents the action of connecting design inspirations to form larger creative entities. This is a research/ideation tool that helps designers discover connections between their inspirations through Are.na's community-curated collections. The name ends in "ING" to emphasize the ongoing action of making connections.
+
+## Version 1 Focus: Are.na Search Tool
+This version focuses exclusively on the Are.na connection discovery tool. Future versions will add Eagle integration, Sanity CMS sync, and mobile helper apps.
+
+## Core Feature: Are.na Connection Discovery
+
+### Search Flow
+1. User inputs a URL
+2. Strip to domain name (e.g., `https://example.com/page` → `example`)
+3. Search Are.na blocks for matches
+4. Find all channels containing matching blocks
+5. Analyze all URLs within those channels
+6. Rank URLs by occurrence frequency across channels
+7. Present both URL and Channel views
+
+### Key Business Rules
+- **URL Matching**: Accept www/no-www and http/https variations
+- **Inexact Matches**: Mark URLs with extra path segments as "inexact"
+- **Cache Validity**: 6 months (auto-refresh after, unless user opts out)
+- **Duplicate Handling**: Skip duplicate URLs within single channel
+- **Large Channels**: Limit to first 50 URLs, then require user continuation
+- **Private Channels**: Skip on 401 error
+- **Rate Limiting**: Implement request queuing and throttling
+
+## Technology Stack
+- **Platform**: macOS native app
+- **Language**: Swift 5.9+
+- **UI Framework**: SwiftUI
+- **Database**: SQLite for caching search results
+- **Networking**: URLSession with async/await
+- **Architecture**: MVVM with Combine
+
+## Are.na API Integration
+
+### Endpoints Used
+
+GET /v2/search/blocks?q=TITLE&page=X GET /v2/blocks/BLOCK_ID/channels?page=X GET /v2/channels/SLUG/contents GET /v2/channels/SLUG/thumb GET /v2/channels/SLUG/connections?page=X
+
+### No Authentication Required
+- All endpoints are public GET requests
+- No API token needed for v1
+
+### Rate Limit Handling
+- 60 requests per minute limit
+- Implement request queue with throttling
+- Show progress during long operations
+- Cache aggressively to minimize repeated calls
+
+## Database Schema
+
+``````sql
+-- Search history
+CREATE TABLE searches (
+    id INTEGER PRIMARY KEY,
+    original_url TEXT NOT NULL,
+    stripped_domain TEXT NOT NULL,
+    searched_at DATETIME NOT NULL,
+    is_stale BOOLEAN DEFAULT 0
+);
+
+-- Cached blocks
+CREATE TABLE blocks (
+    id INTEGER PRIMARY KEY,
+    arena_block_id TEXT UNIQUE,
+    source_url TEXT,
+    title TEXT,
+    is_exact_match BOOLEAN DEFAULT 1
+);
+
+-- Cached channels
+CREATE TABLE channels (
+    id INTEGER PRIMARY KEY,
+    slug TEXT UNIQUE,
+    owner_slug TEXT,
+    title TEXT,
+    username TEXT,
+    block_count INTEGER,
+    connection_count INTEGER,
+    thumbnail_urls TEXT -- JSON array of first 6
+);
+
+-- Block-Channel relationships
+CREATE TABLE block_channels (
+    block_id INTEGER,
+    channel_id INTEGER,
+    FOREIGN KEY (block_id) REFERENCES blocks(id),
+    FOREIGN KEY (channel_id) REFERENCES channels(id)
+);
+
+-- URLs found in channels
+CREATE TABLE channel_urls (
+    channel_id INTEGER,
+    url TEXT,
+    is_exact_match BOOLEAN DEFAULT 1,
+    occurrence_count INTEGER DEFAULT 1,
+    FOREIGN KEY (channel_id) REFERENCES channels(id)
+);
+```
+``````
+
+## UI Components
+
+### Main Search View
+
+- URL input field
+- Search/Re-index buttons
+- Progress indicator during search
+- Toggle between URL and Channel views
+
+### Results Views
+
+1. **URL View**: Ranked list of discovered URLs with occurrence counts
+2. **Channel View**: List of channels containing the searched URL
+
+### Channel Preview (Hover)
+
+- Title and username
+- Block count
+- Connection count
+- 6 thumbnail gallery
+- "Inexact match" indicator if applicable
+
+### Channel Actions (Context Menu)
+
+- Open in browser
+- View inner channels (contents)
+- View outer channels (connections)
+
+## Code Patterns
+
+### URL Processing
+
+```swift
+func stripToDomainn(from url: URL) -> String {
+    // Extract just the domain name
+    // example.com → example
+}
+
+func urlsMatch(_ url1: String, _ url2: String) -> (matches: Bool, isExact: Bool) {
+    // Compare URLs flexibly
+    // Handle www, protocol differences
+    // Detect path segment differences
+}
+```
+
+### API Request Management
+
+swift
+
+```swift
+class ArenaAPIQueue {
+    // Throttle to 60 requests/minute
+    // Queue requests
+    // Handle pagination automatically
+}
+```
+
+### Cache Management
+
+swift
+
+```swift
+func getCacheStatus(for url: String) -> CacheStatus {
+    // .fresh (< 6 months)
+    // .stale (> 6 months)
+    // .notCached
+}
+```
+
+## Error Handling
+
+- Network failures: Show offline mode with cached data
+- Rate limits: Queue and retry with progress indication
+- Private channels: Skip silently, log for debugging
+- Large datasets: Paginate with user control
+
+## Performance Considerations
+
+- Lazy load channel thumbnails
+- Virtualized lists for large result sets
+- Background processing for API calls
+- Efficient SQL queries with proper indexing
+
+## Visual Design Notes
+
+- Constellation metaphors throughout
+- Dark mode optimized
+- Beautiful loading states
+- Smooth animations for state transitions
+- Clear visual hierarchy for results
+
+## Testing Scenarios
+
+- URLs with various formats (www, https, paths)
+- Channels with 1000+ blocks
+- Rate limit handling
+- 6+ month old cached data
+- Network interruptions
+- Private channel encounters
+
+## Future v2 Additions (Not in Current Scope)
+
+- Eagle integration for local design library
+- Sanity CMS sync
+- iOS/iPadOS helper apps
+- Safari extension
+- Beautiful script execution logging
