@@ -6,6 +6,10 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		B5749DFF2E145521002BF1FF /* Inject in Frameworks */ = {isa = PBXBuildFile; productRef = B5749DFE2E145521002BF1FF /* Inject */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXContainerItemProxy section */
 		B531F58A2E13D046007633EE /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -52,6 +56,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B5749DFF2E145521002BF1FF /* Inject in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -112,6 +117,7 @@
 			);
 			name = Constellating;
 			packageProductDependencies = (
+				B5749DFE2E145521002BF1FF /* Inject */,
 			);
 			productName = Constellating;
 			productReference = B531F5762E13D044007633EE /* Constellating.app */;
@@ -195,6 +201,9 @@
 			);
 			mainGroup = B531F56D2E13D044007633EE;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				B5749DFD2E145521002BF1FF /* XCRemoteSwiftPackageReference "Inject" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = B531F5772E13D044007633EE /* Products */;
 			projectDirPath = "";
@@ -551,6 +560,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		B5749DFD2E145521002BF1FF /* XCRemoteSwiftPackageReference "Inject" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/krzysztofzablocki/Inject.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.5.2;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		B5749DFE2E145521002BF1FF /* Inject */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = B5749DFD2E145521002BF1FF /* XCRemoteSwiftPackageReference "Inject" */;
+			productName = Inject;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = B531F56E2E13D044007633EE /* Project object */;
 }

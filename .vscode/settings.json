@@ -10,5 +10,10 @@
         "explainCode": "Explain this Swift/SwiftUI code for the Constellating Are.na search tool",
         "findBugs": "Find issues in this code, especially around API calls, caching, and URL matching",
         "optimize": "Optimize this for performance, considering Are.na rate limits"
+    },
+    "lldb.library": "/Applications/Xcode.app/Contents/SharedFrameworks/LLDB.framework/Versions/A/LLDB",
+    "lldb.launch.expressions": "native",
+    "[swift]": {
+        "editor.defaultFormatter": "vknabel.vscode-apple-swift-format"
     }
 }

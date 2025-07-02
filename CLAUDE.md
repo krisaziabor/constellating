@@ -36,12 +36,12 @@ I'm building "Constellating" - a macOS app that helps designers discover connect
 - **Flexible Matching**: Accept www/no-www, http/https
 - **Inexact Matches**: Flag URLs with extra path segments
 - **Example**: Searching "example.com" matches:
-  - ✅ Exact: https://example.com, http://www.example.com
-  - ⚠️ Inexact: https://example.com/blog/post
+  - ✅ Exact: <https://example.com>, <http://www.example.com>
+  - ⚠️ Inexact: <https://example.com/blog/post>
 
 ### API Details
 
-- **Base URL**: https://api.are.na/v2
+- **Base URL**: <https://api.are.na/v2>
 - **Auth**: None required for GET requests
 - **Rate Limit**: 60 requests/minute
 - **Pagination**: Check `total_pages` in responses
@@ -162,6 +162,22 @@ class SearchViewModel: ObservableObject {
 4. Create beautiful UI with smooth animations
 5. Handle edge cases (private channels, large datasets)
 
+## Code Quality Commands
+
+**IMPORTANT**: After making any code changes, always run these commands before building:
+
+```bash
+# Format code with SwiftFormat
+swiftformat .
+
+# Check for linting issues
+swiftlint
+```
+
+### Code Quality Guidelines
+
+- When you do swiftlint and see violations, fix them and run the command again until the violations are all gone.
+
 ## Remember
 
 - v1 is Are.na search only (no Eagle/Sanity/mobile yet)
@@ -178,3 +194,4 @@ class SearchViewModel: ObservableObject {
 - iOS/iPadOS helper apps
 - Safari extension
 - Script automation with beautiful logging
+
